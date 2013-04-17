@@ -30,6 +30,7 @@
 		9F406A4C171E64CA00DAD9AD /* Timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
 		9F406A4E171E651B00DAD9AD /* base64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
 		9F406A50171F1F7600DAD9AD /* testbase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testbase64.h; sourceTree = "<group>"; };
+		9F4C4AE8171F4F57002F80FE /* base64explained.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base64explained.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				9F406A4C171E64CA00DAD9AD /* Timer.h */,
+				9F4C4AE8171F4F57002F80FE /* base64explained.h */,
 				9F406A4E171E651B00DAD9AD /* base64.h */,
 				9F406A50171F1F7600DAD9AD /* testbase64.h */,
 				9F406A43171E649000DAD9AD /* main.c */,

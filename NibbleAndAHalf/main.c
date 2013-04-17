@@ -1,5 +1,5 @@
 //
-//  main.cpp
+//  main.c
 //  NibbleAndAHalf
 //
 //  See "base64.h" for compile-time settings & copyright notice.
@@ -14,18 +14,12 @@
 #include "Timer.h"
 #include "base64.h"   // THIS IS ALL YOU NEED to use base64 and unbase64.
 
-// Verbosely shows the base64 test data.
 // Don't uncomment this unless you are testing small data sizes
-// Affects testbase64 function in "testbase64.h" only.
-//
-//     #define BASE64TESTSHOWDATA
-#include "testbase64.h"
-
-// Constant used IN THIS FILE:
-//int BASE64TESTMAXDATALEN=1<<4 ; // test up to 16 bytes of random data. tests can go much bigger,
-                                // BUT YOU SHOULD TURN BASE64TESTSHOWDATA OFF IF YOU DO THAT.
+// #define BASE64TESTSHOWDATA
 
 int BASE64TESTMAXDATALEN=1<<27; // Tests up to 128 MB
+
+#include "testbase64.h"
 
 int main( int argc, char** argv )
 {
@@ -37,7 +31,8 @@ int main( int argc, char** argv )
   // WRITE YOUR OWN TEST
   const char * str = "hi there aardvark!! @#$**&^)" ;
   testbase64( str, (int)strlen(str) ) ;
-  testunbase64withbaddat();
+  
+  //testunbase64withbadascii();
   
   ///*
   // AUTOMATED TESTS
