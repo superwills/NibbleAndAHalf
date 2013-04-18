@@ -1,18 +1,19 @@
 //
 //  main.c
-//  NibbleAndAHalf
+//  https://github.com/superwills/NibbleAndAHalf
 //
 //  See "base64.h" for compile-time settings & copyright notice.
 //  
 //  nibble&a half
 //  OR PROJECT SEXTET STREAM 
 
+#include "base64.h"   // THIS IS ALL YOU NEED to use base64 and unbase64.
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "Timer.h"
-#include "base64.h"   // THIS IS ALL YOU NEED to use base64 and unbase64.
+
 
 // Don't uncomment this unless you are testing small data sizes
 // #define BASE64TESTSHOWDATA
@@ -45,7 +46,7 @@ int main( int argc, char** argv )
     for( i = 0 ; i < testDatLen ; i++ )
       dat[i]=rand(); // make new random data
       
-    allOk |= testbase64( dat, testDatLen ) ;
+    allOk &= testbase64( dat, testDatLen ) ;
     
     free( dat ) ;
     

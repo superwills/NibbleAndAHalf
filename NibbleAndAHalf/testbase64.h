@@ -6,9 +6,10 @@
 //  UNIT TESTS ONLY.
 //  YOU DO NOT NEED THIS FILE WHEN USING "base64.h"
 //
-
 #ifndef BASE64TEST_H
 #define BASE64TEST_H
+
+#include "Timer.h"
 
 // Checks the integrity of a base64 string to make sure it is
 // made up of only characters in the base64 alphabet (array b64)
