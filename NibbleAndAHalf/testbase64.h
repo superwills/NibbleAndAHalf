@@ -115,7 +115,7 @@ int testbase64( const void* data, int dataLen )
   
   CTimerReset( &t ) ;
   recoveredData = unbase64( base64Ascii, base64AsciiLen, &recoveredLen ) ;
-  if( !recoveredData )  return 0 ; //memory failure
+  if( !recoveredData )  return 0 ; //memory failure, or invalid base64 data
   printf( "unbase64 %f seconds\n", CTimerGetTime( &t ) ) ;
   
   #ifdef BASE64TESTSHOWDATA
@@ -125,7 +125,7 @@ int testbase64( const void* data, int dataLen )
   puts( "--------------------" ) ;
   puts( "Base64'd ascii text:" ) ;
   puts( "--------------------" ) ;
-  puts( base64dAscii ) ;
+  puts( recoveredData ) ;
   puts( "--------------------" ) ;
   #endif
   

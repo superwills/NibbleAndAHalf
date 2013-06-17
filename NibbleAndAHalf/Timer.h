@@ -81,7 +81,7 @@ void CTimerInit( CTimer* ctimer ) {
   #ifdef _WIN32
   LARGE_INTEGER freq ;
   QueryPerformanceFrequency( &freq ) ;
-  time->fFreq = (double)freq.QuadPart ;
+  ctimer->fFreq = (double)freq.QuadPart ;
   #else
   gettimeofday( &ctimer->startTime, NULL ) ;
   #endif
@@ -93,7 +93,7 @@ double CTimerGetTime( CTimer* ctimer ) {
   #ifdef _WIN32
   LARGE_INTEGER endTime ;
   QueryPerformanceCounter( &endTime ) ;
-  return ( endTime.QuadPart - startTime.QuadPart ) / ctimer->fFreq ; // as double
+  return ( endTime.QuadPart - ctimer->startTime.QuadPart ) / ctimer->fFreq ; // as double
   #else
   struct timeval endTime ;
   gettimeofday( &endTime, NULL ) ;

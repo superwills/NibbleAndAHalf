@@ -31,6 +31,7 @@
 #ifndef BASE64_H
 #define BASE64_H
 
+#include <stdio.h>
 #include <stdlib.h>
 
 const static char* b64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" ;
@@ -121,11 +122,17 @@ char* base64( const void* binaryData, int len, int *flen )
 unsigned char* unbase64( const char* ascii, int len, int *flen )
 {
   unsigned char *safeAsciiPtr = (unsigned char*)ascii ;
-  unsigned char* bin ;
+  unsigned char *bin ;
   int cb=0;
   int charNo;
   int pad = 0 ;
-  
+
+  if( len < 2 ) { // 2 accesses below would be OOB.
+    // catch empty string, return NULL as result.
+    puts( "ERROR: You passed an invalid base64 string (too short). You get NULL back." ) ;
+    *flen=0;
+    return 0 ;
+  }
   if( safeAsciiPtr[ len-1 ]=='=' )  ++pad ;
   if( safeAsciiPtr[ len-2 ]=='=' )  ++pad ;
   

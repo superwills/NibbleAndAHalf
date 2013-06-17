@@ -16,7 +16,7 @@
 
 
 // Don't uncomment this unless you are testing small data sizes
-// #define BASE64TESTSHOWDATA
+//#define BASE64TESTSHOWDATA
 
 int BASE64TESTMAXDATALEN=1<<27; // Tests up to 128 MB
 
@@ -31,8 +31,9 @@ int main( int argc, char** argv )
   
   // WRITE YOUR OWN TEST
   const char * str = "hi there aardvark!! @#$**&^)" ;
-  testbase64( str, (int)strlen(str) ) ;
-  
+  testbase64( str, (int)strlen(str)+1 ) ;  // length of strlen(str)+1 to include NULL in the base64 encoding
+  //testbase64( "", 0 ) ; // sweet empty string test case
+  return 1 ;
   //testunbase64withbadascii();
   
   ///*
