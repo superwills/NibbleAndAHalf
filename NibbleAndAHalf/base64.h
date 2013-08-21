@@ -71,7 +71,7 @@ const static unsigned char unb64[]={
 // (you must pass pointer flen).
 char* base64( const void* binaryData, int len, int *flen )
 {
-  unsigned char* bin = (unsigned char*) binaryData ;
+  const unsigned char* bin = (const unsigned char*) binaryData ;
   char* res ;
   
   int rc = 0 ; // result counter
@@ -121,7 +121,7 @@ char* base64( const void* binaryData, int len, int *flen )
 
 unsigned char* unbase64( const char* ascii, int len, int *flen )
 {
-  unsigned char *safeAsciiPtr = (unsigned char*)ascii ;
+  const unsigned char *safeAsciiPtr = (const unsigned char*)ascii ;
   unsigned char *bin ;
   int cb=0;
   int charNo;

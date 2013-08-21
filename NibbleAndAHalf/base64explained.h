@@ -90,7 +90,7 @@ char* base64( const void* binaryData, int len, int *flen )
 {
   // I look at your data like the stream of unsigned bytes that it is
   // Main pointers
-  unsigned char* bin = (unsigned char*) binaryData ;
+  const unsigned char* bin = (const unsigned char*) binaryData ;
   char* res ;
   
   // Counters
@@ -263,8 +263,8 @@ int base64integrity( const char *ascii, int len )
 
 unsigned char* unbase64( const char* ascii, int len, int *flen )
 {
-  unsigned char *safeAsciiPtr = (unsigned char*)ascii ; // internally I use
-  // an unsigned char pointers, so that __the maximum value read out is 255,
+  const unsigned char *safeAsciiPtr = (const unsigned char*)ascii ; // internally I use
+  // an unsigned char pointer, so that __the maximum value read out is 255,
   // and the value is never negative__.  This is a type of
   // "if statement" enforced by the type of the pointer.
   unsigned char* bin ;
