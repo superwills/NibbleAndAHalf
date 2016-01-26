@@ -64,7 +64,7 @@ const static unsigned char unb64[]={
   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //240 
   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //250 
   0,   0,   0,   0,   0,   0, 
-}; // This array has 255 elements
+}; // This array has 256 elements
 
 // Converts binary data of length=len to base64 characters.
 // Length of the resultant string is stored in flen
