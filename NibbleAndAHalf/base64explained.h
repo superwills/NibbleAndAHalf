@@ -267,6 +267,9 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
   // an unsigned char pointer, so that __the maximum value read out is 255,
   // and the value is never negative__.  This is a type of
   // "if statement" enforced by the type of the pointer.
+  // This eliminates a possible bounds check on your array lookups into unb64[]
+  // (*(unsigned char*) having values between 0 and 255 means it will always be
+  // inside the bounds of the 256 element array).
   unsigned char* bin ;
   int cb=0; // counter for bin
   int charNo; // counter for what base64 char we're currently decoding
