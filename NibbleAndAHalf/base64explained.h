@@ -1,9 +1,9 @@
 /*
-  
+
   https://github.com/superwills/NibbleAndAHalf
   base64explained.h -- Fast base64 encoding and decoding.
   version 1.0.0, April 17, 2013 143a
-  
+
   EXPLAINS how the functions in base64.h work. You don't need this file,
   only base64.h is needed.
 
@@ -39,7 +39,7 @@
 //
 // BASE64PARANOIA: Remove this def to NOT check the validity of base64 ascii strings
 // before unbase64'ing that string.  If you don't #define BASE64PARANOIA,
-// then the program assumes that all characters in the string sent to unbase64() 
+// then the program assumes that all characters in the string sent to unbase64()
 // are in the base64 alphabet.  As such if a character is NOT in the base64 alphabet
 // your data will be wrong (it will be turned to 0 (as if it were just a base64 'A')).
 // Removing this test greatly speeds up unbase64'ing (by about 3-4x).
@@ -55,32 +55,32 @@ const static char* b64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123
 
 // maps A=>0,B=>1..
 const static unsigned char unb64[]={
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //10 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //20 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //30 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //40 
-  0,   0,   0,  62,   0,   0,   0,  63,  52,  53, //50 
- 54,  55,  56,  57,  58,  59,  60,  61,   0,   0, //60 
-  0,   0,   0,   0,   0,   0,   1,   2,   3,   4, //70 
-  5,   6,   7,   8,   9,  10,  11,  12,  13,  14, //80 
- 15,  16,  17,  18,  19,  20,  21,  22,  23,  24, //90 
- 25,   0,   0,   0,   0,   0,   0,  26,  27,  28, //100 
- 29,  30,  31,  32,  33,  34,  35,  36,  37,  38, //110 
- 39,  40,  41,  42,  43,  44,  45,  46,  47,  48, //120 
- 49,  50,  51,   0,   0,   0,   0,   0,   0,   0, //130 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //140 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //150 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //160 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //170 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //180 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //190 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //200 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //210 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //220 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //230 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //240 
-  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //250 
-  0,   0,   0,   0,   0,   0, 
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //10
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //20
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //30
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //40
+  0,   0,   0,  62,   0,   0,   0,  63,  52,  53, //50
+ 54,  55,  56,  57,  58,  59,  60,  61,   0,   0, //60
+  0,   0,   0,   0,   0,   0,   1,   2,   3,   4, //70
+  5,   6,   7,   8,   9,  10,  11,  12,  13,  14, //80
+ 15,  16,  17,  18,  19,  20,  21,  22,  23,  24, //90
+ 25,   0,   0,   0,   0,   0,   0,  26,  27,  28, //100
+ 29,  30,  31,  32,  33,  34,  35,  36,  37,  38, //110
+ 39,  40,  41,  42,  43,  44,  45,  46,  47,  48, //120
+ 49,  50,  51,   0,   0,   0,   0,   0,   0,   0, //130
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //140
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //150
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //160
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //170
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //180
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //190
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //200
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //210
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //220
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //230
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //240
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //250
+  0,   0,   0,   0,   0,   0,
 }; // This array has 255 elements
 
 // Converts binary data of length=len to base64 characters.
@@ -92,14 +92,14 @@ char* base64( const void* binaryData, int len, int *flen )
   // Main pointers
   const unsigned char* bin = (const unsigned char*) binaryData ;
   char* res ;
-  
+
   // Counters
   int rc = 0 ; // result counter
   int byteNo ; // I need this after the loop
-  
+
   int modulusLen = len % 3 ;
   int pad = ((modulusLen&1)<<1) + ((modulusLen&2)>>1) ; // 2 gives 1 and 1 gives 2, but 0 gives 0.
-  
+
   // Could also do 3-modulusLen, but that gives 3 when modulusLen=0.
   // 0 => 0
   // 1 => 1  pad 2
@@ -116,7 +116,7 @@ char* base64( const void* binaryData, int len, int *flen )
     puts( "I must stop because I could not get enough" ) ;
     return 0;
   }
-  
+
   for( byteNo = 0 ; byteNo <= len-3 ; // If there WAS padding, skip the last 3 octets and process below.
     // 0=>no, 1=>no, 2=>no, 3=>ONCE,4=>ONCE,5=>ONCE, 6=>2x..
     byteNo+=3 )
@@ -134,26 +134,26 @@ char* base64( const void* binaryData, int len, int *flen )
     // C:46 => u
     // D:45 => t
     ///unsigned char mask11111100 = 0x3f, mask00111111 = 0x3f, mask00111111 = 0x3f ;
-    
+
     // Take first sextet (an octet (byte) is 8 bits, so a sextet is 6 bits, or a nibble and a half.)
     // and find out what number they are.
-    res[rc++]  = b64[ BYTE0 >> 2 ] ; // unsigned so 0's always come in from left (even though there is 
+    res[rc++]  = b64[ BYTE0 >> 2 ] ; // unsigned so 0's always come in from left (even though there is
     // implicit int promotion on R&L sides prior to actual bitshift).
     // convert that number into the base64 alphabet.
     // the value in 6 bits can never be larger than 63.
-    
+ 
     // the second sextet is part of the first byte and partly in the 2nd byte.
     res[rc++]  = b64[ ((0x3&BYTE0)<<4) + (BYTE1 >> 4) ] ;  // 1st term: 3<<4 has a maximum value of 110000=48.
-    
+
     // notice how I avoided the scary endian ghost by using a unsigned char* ptr for all this.
-    
+
     // 3rd sextet is lower nibble of 2nd byte and upper half nibble of 3rd byte.
     res[rc++]  = b64[ ((0x0f&BYTE1)<<2) + (BYTE2>>6) ] ; // 1st term: those are the higher order bits
-    
+
     // 4th sextet
     res[rc++]  = b64[ 0x3f&BYTE2 ] ;  // already low order, just mask off 2 hiorder bits
   }
-  
+
   // The last 3 octets must be converted carefully as if len%3==1 or len%3==2 we must
   // "pretend" there are additional bits at the end.
   if( pad==2 ) //len%3==1 (1,4,7,10)
@@ -179,15 +179,15 @@ char* base64( const void* binaryData, int len, int *flen )
     //    bin[0]       bin[1]      bin[2]
     // +-----------+-----------+-----------+
     // | 0000 0011   1111 1111   ~~~~ ~~~~ |
-    // +-AAAA AABB   BBBB CCCC   XXXX XXXX  
+    // +-AAAA AABB   BBBB CCCC   XXXX XXXX
     res[rc++]  = b64[ bin[byteNo] >> 2 ] ;
     res[rc++]  = b64[ ((0x3&bin[byteNo])<<4)   +   (bin[byteNo+1] >> 4) ] ; //SEX2 formula
     res[rc++]  = b64[ (0x0f&bin[byteNo+1])<<2 ] ; // only part of SEX3 that comes from byte#1
-     
+
     // Last one is =.
     res[rc++] = '=';
   }
-  
+
   res[rc]=0; // NULL TERMINATOR! ;)
   return res ;
 }
@@ -220,13 +220,13 @@ int base64integrity( const char *ascii, int len )
   int i ;
   for( i = 0 ; i < len - 2 ; i++ )
   {
-    if( !isbase64ValidChr( ascii[i] ) ) 
+    if( !isbase64ValidChr( ascii[i] ) )
     {
       printf( "ERROR in base64integrity at chr %d. String is NOT valid base64.\n", i ) ;
       return 0 ;
     }
   }
-  
+
   // Only last 2 can be '='
   // Check 2nd last:
   if( ascii[i]=='=' )
@@ -246,18 +246,18 @@ int base64integrity( const char *ascii, int len )
     printf( "ERROR in base64integrity at chr %d (2nd last chr). String is NOT valid base64.\n", i ) ;
     return 0 ;
   }
-  
+
   // check last
-  
+
   i++ ;
   if( ascii[i]!='=' && !isbase64ValidChr( ascii[i] ) )
   {
     printf( "ERROR in base64integrity at chr %d (last chr). String is NOT valid base64.\n", i ) ;
-    return 0 ;    
+    return 0 ;
   }
-  
+
   // Otherwise if get here, b64 string was valid.
-  
+
   return 1 ;
 }
 
@@ -274,15 +274,15 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
   int cb=0; // counter for bin
   int charNo; // counter for what base64 char we're currently decoding
   int pad = 0 ;
-  
+
 #ifdef BASE64PARANOIA
   if( !base64integrity( ascii, len ) )  return 0 ; // NULL PTR if bad integrity.
 #endif
-  
+
   // Count == on the end to determine how much it was padded.
   if( safeAsciiPtr[ len-1 ]=='=' )  ++pad ;
   if( safeAsciiPtr[ len-2 ]=='=' )  ++pad ;
-  
+
   // You take the ascii string len and divide it by 4
   // to get #24lets (groups of 3 octets). You then *3 to
   // get #octets total.
@@ -294,7 +294,7 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
     puts( "I must stop because I could not get enough" ) ;
     return 0;
   }
-  
+
   // NEVER do the last group of 4 characters if either of the
   // last 2 chars were pad.
   for( charNo=0; charNo <= len - 4 - pad ; charNo+=4 )
@@ -314,10 +314,10 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
     //printf( "[%4d] %c => %d\n", charNo+2, ascii[charNo+2], C ) ;
     int D=unb64[safeAsciiPtr[charNo+3]];
     //printf( "[%4d] %c => %d\n", charNo+3, ascii[charNo+3], D ) ;
-    
+
     // Just unmap each sextet to THE NUMBER it represents.
     // You then have to pack it in bin,
-    // we go in groups of 4 sextets, 
+    // we go in groups of 4 sextets,
     // and pull out 3 octets per quad of sextets.
     //    bin[0]       bin[1]      bin[2]
     // +-----------+-----------+-----------+
@@ -325,26 +325,26 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
     // +-AAAA AABB   BBBB CCCC   CCDD DDDD
     // or them
     bin[cb++] = (A<<2) | (B>>4) ; // or in last 2 bits of B
-    
+
     // The 2nd byte is the bottom 4 bits of B for the upper nibble,
     // and the top 4 bits of C for the lower nibble.
     bin[cb++] = (B<<4) | (C>>2) ;
     bin[cb++] = (C<<6) | (D) ; // shove C up to top 2 bits, or with D
   }
-  
+
   if( pad==1 )
   {
     // 1 padding character.
     //    bin[0]       bin[1]      bin[2]
     // +-----------+-----------+-----------+
     // | 0000 0011   1111 1111   ~~~~ ~~~~ |
-    // +-AAAA AABB   BBBB CCCC   XXXX XXXX  
+    // +-AAAA AABB   BBBB CCCC   XXXX XXXX
     // We can pull 2 bytes out, not 3.
     // We have __3__ characters A,B and C, not 4.
     int A=unb64[safeAsciiPtr[charNo]];
     int B=unb64[safeAsciiPtr[charNo+1]];
     int C=unb64[safeAsciiPtr[charNo+2]];
-    
+
     bin[cb++] = (A<<2) | (B>>4) ;
     bin[cb++] = (B<<4) | (C>>2) ;
   }
@@ -356,11 +356,12 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
     // +-AAAA AABB   XXXX XXXX   XXXX XXXX
     int A=unb64[safeAsciiPtr[charNo]];
     int B=unb64[safeAsciiPtr[charNo+1]];
-    
+
     bin[cb++] = (A<<2) | (B>>4) ;
   }
-  
+
   return bin ;
 }
 
 #endif
+

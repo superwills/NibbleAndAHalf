@@ -39,13 +39,13 @@ int base64integrity( const char *ascii, int len )
   int i ;
   for( i = 0 ; i < len - 2 ; i++ )
   {
-    if( !isbase64ValidChr( ascii[i] ) ) 
+    if( !isbase64ValidChr( ascii[i] ) )
     {
       printf( "ERROR in base64integrity at chr %d. String is NOT valid base64.\n", i ) ;
       return 0 ;
     }
   }
-  
+
   // Only last 2 can be '='
   // Check 2nd last:
   if( ascii[i]=='=' )
@@ -65,18 +65,18 @@ int base64integrity( const char *ascii, int len )
     printf( "ERROR in base64integrity at chr %d (2nd last chr). String is NOT valid base64.\n", i ) ;
     return 0 ;
   }
-  
+
   // check last
-  
+
   i++ ;
   if( ascii[i]!='=' && !isbase64ValidChr( ascii[i] ) )
   {
     printf( "ERROR in base64integrity at chr %d (last chr). String is NOT valid base64.\n", i ) ;
-    return 0 ;    
+    return 0 ;
   }
-  
+
   // Otherwise if get here, b64 string was valid.
-  
+
   return 1 ;
 }
 
@@ -87,37 +87,37 @@ int testbase64( const void* data, int dataLen )
   unsigned char* binaryPtr = (unsigned char*)data ;
   char* base64Ascii ;
   unsigned char* recoveredData ;
-  
+
   int outcome=1;
   int base64AsciiLen, recoveredLen ;
   int i ; //compare loop counter
   CTimer t; // for timing runs
-  
+
   printf( "Base64 test with " ) ;
   if( dataLen < 1<<10 )  printf( "%d Bytes", dataLen ) ;
   else if( dataLen < 1<<20 )  printf( "%d KB", dataLen >> 10 ) ;
   else if( dataLen < 1<<30 )  printf( "%d MB", dataLen >> 20 ) ;
   else  printf( "%d GB", dataLen >> 30 ) ;
   printf( " of data\n" ) ;
-  
+
   CTimerInit( &t ) ;
   base64Ascii = base64( data, dataLen, &base64AsciiLen ) ;
   if( !base64Ascii )  return 0 ; //memory failure
   printf( "base64 %f seconds\n", CTimerGetTime( &t ) ) ;
-  
+
   CTimerReset( &t ) ;
   if( base64integrity( base64Ascii, base64AsciiLen ) ) // Check the integrity of the base64'd string
     puts( "All base64 encoded data are valid base64 alphabet characters" ) ;
   else
     puts( "ERROR: Bad base64 characters detected" ) ;
   printf( "base64 integrity check %f seconds\n", CTimerGetTime( &t ) ) ;
-  
-  
+
+
   CTimerReset( &t ) ;
   recoveredData = unbase64( base64Ascii, base64AsciiLen, &recoveredLen ) ;
   if( !recoveredData )  return 0 ; //memory failure, or invalid base64 data
   printf( "unbase64 %f seconds\n", CTimerGetTime( &t ) ) ;
-  
+
   #ifdef BASE64TESTSHOWDATA
   puts( "Original text:" ) ;
   puts( "--------------------" ) ;
@@ -128,7 +128,7 @@ int testbase64( const void* data, int dataLen )
   puts( recoveredData ) ;
   puts( "--------------------" ) ;
   #endif
-  
+
   printf( "base64: %d bytes => %d bytes => %d bytes\n", dataLen, base64AsciiLen, recoveredLen ) ;
   puts( "Checking.." ) ;
   if( dataLen != recoveredLen )
@@ -147,9 +147,9 @@ int testbase64( const void* data, int dataLen )
     {
       printf( " X" ) ; //\nERROR: byte @ %d != original data: (%d != %d)\n", i, data[i], recoveredData[i] );
       outcome = 0 ;
-    } 
+    }
   }
-  
+
   free( base64Ascii ) ;
   free( recoveredData ) ;
   if( outcome )
@@ -170,18 +170,18 @@ void testunbase64withbadascii()
   int badAsciiLen = sizeof( badAscii ) ;
   unsigned char *baddat ;
   int baddatLen ;
-  
+
   puts( ">> NOW TESTING UNBASE64 WITH INVALID DATA:" ) ;
   for( i = 0 ; i < badAsciiLen; i++ )
     printf( "%d, ", badAscii[i] ) ;
   printf("\n<< EXPECTED >> ");
-    
+
   // check the integrity ( it will show it's not valid base64 )
   if( !base64integrity( badAscii, badAsciiLen ) )
   {
     puts( "There are some invalid ascii characters in your base64 string" ) ;
     baddat = unbase64( badAscii, badAsciiLen, &baddatLen ) ;
-    
+
     puts( "The unbase64'd data, anyway, is:" ) ;
     for( i = 0 ; i < baddatLen ; i++ )
       printf( "%d, ", baddat[i] ) ;
@@ -233,7 +233,7 @@ void printUnbase64()
     printf( "%3d, ", i-'a'+26 ) ; //'a' has the value of 26
     if( i && (i+1)%10==0 ) printf("//%d \n", (i+1) );
   }
-  
+
   // Now put 0's until 255, in case string sent to be unbase64'd
   // contains illegal characters
   for( ; i < 256 ; i++ )
@@ -242,7 +242,8 @@ void printUnbase64()
     if( i && (i+1)%10==0 ) printf("//%d \n", (i+1) );
   }
   printf( "\n}; // This array has %d elements\n", i-1 ) ;
-  
+
 }
 
 #endif
+
