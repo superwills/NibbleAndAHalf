@@ -1,4 +1,14 @@
 /*
+  This is from https://github.com/briancsparks/NibbleAndAHalf,
+  which is a fork of https://github.com/superwills/NibbleAndAHalf.
+
+  It has 'standard' and 'URL' variants. (The URL variant is what
+  Node.js uses, so if you have C/C++ that is sending base64 over
+  HTTP (especially to a Node.js server), you want to use the URL
+  variant.)
+*/
+
+/*
 
   https://github.com/superwills/NibbleAndAHalf
   base64.h -- Fast base64 encoding and decoding.
@@ -28,16 +38,17 @@
   YWxsIHlvdXIgYmFzZSBhcmUgYmVsb25nIHRvIHVz
 
 */
+
 #ifndef BASE64_H
 #define BASE64_H
 
 #include <stdio.h>
 #include <stdlib.h>
 
-const static char* b64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" ;
+const static char* standardBase64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" ;
 
 // maps A=>0,B=>1..
-const static unsigned char unb64[]={
+const static unsigned char standardBase64Decode[]={
   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //10
   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //20
   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //30
@@ -66,12 +77,48 @@ const static unsigned char unb64[]={
   0,   0,   0,   0,   0,   0,
 }; // This array has 256 elements
 
+// URL and Filename safe alphabet (see: https://en.wikipedia.org/wiki/Base64#Implementations_and_history)
+//    * This is the format that Node.js uses
+const static char* base64Url="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_" ;
+
+// maps A=>0,B=>1..
+const static unsigned char base64UrlDecode[]={
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //10
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //20
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //30
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //40
+  0,   0,   0,   0,   0,  62,   0,   0,  52,  53, //50
+ 54,  55,  56,  57,  58,  59,  60,  61,   0,   0, //60
+  0,   0,   0,   0,   0,   0,   1,   2,   3,   4, //70
+  5,   6,   7,   8,   9,  10,  11,  12,  13,  14, //80
+ 15,  16,  17,  18,  19,  20,  21,  22,  23,  24, //90
+ 25,   0,   0,   0,   0,  63,   0,  26,  27,  28, //100
+ 29,  30,  31,  32,  33,  34,  35,  36,  37,  38, //110
+ 39,  40,  41,  42,  43,  44,  45,  46,  47,  48, //120
+ 49,  50,  51,   0,   0,   0,   0,   0,   0,   0, //130
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //140
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //150
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //160
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //170
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //180
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //190
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //200
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //210
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //220
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //230
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //240
+  0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //250
+  0,   0,   0,   0,   0,   0,
+}; // This array has 256 elements
+
 // Converts binary data of length=len to base64 characters.
 // Length of the resultant string is stored in flen
 // (you must pass pointer flen).
-char* base64( const void* binaryData, int len, int *flen )
+// Pass one of the encoding variants (or NULL to get 'standard').
+char* base64Variant( const void* binaryData, int len, int *flen, const char* variant )
 {
   const unsigned char* bin = (const unsigned char*) binaryData ;
+  const char * encodingVariant  = (variant != NULL ? variant : standardBase64);
   char* res ;
 
   int rc = 0 ; // result counter
@@ -94,24 +141,24 @@ char* base64( const void* binaryData, int len, int *flen )
     unsigned char BYTE0=bin[byteNo];
     unsigned char BYTE1=bin[byteNo+1];
     unsigned char BYTE2=bin[byteNo+2];
-    res[rc++]  = b64[ BYTE0 >> 2 ] ;
-    res[rc++]  = b64[ ((0x3&BYTE0)<<4) + (BYTE1 >> 4) ] ;
-    res[rc++]  = b64[ ((0x0f&BYTE1)<<2) + (BYTE2>>6) ] ;
-    res[rc++]  = b64[ 0x3f&BYTE2 ] ;
+    res[rc++]  = encodingVariant[ BYTE0 >> 2 ] ;
+    res[rc++]  = encodingVariant[ ((0x3&BYTE0)<<4) + (BYTE1 >> 4) ] ;
+    res[rc++]  = encodingVariant[ ((0x0f&BYTE1)<<2) + (BYTE2>>6) ] ;
+    res[rc++]  = encodingVariant[ 0x3f&BYTE2 ] ;
   }
 
   if( pad==2 )
   {
-    res[rc++] = b64[ bin[byteNo] >> 2 ] ;
-    res[rc++] = b64[ (0x3&bin[byteNo])<<4 ] ;
+    res[rc++] = encodingVariant[ bin[byteNo] >> 2 ] ;
+    res[rc++] = encodingVariant[ (0x3&bin[byteNo])<<4 ] ;
     res[rc++] = '=';
     res[rc++] = '=';
   }
   else if( pad==1 )
   {
-    res[rc++]  = b64[ bin[byteNo] >> 2 ] ;
-    res[rc++]  = b64[ ((0x3&bin[byteNo])<<4)   +   (bin[byteNo+1] >> 4) ] ;
-    res[rc++]  = b64[ (0x0f&bin[byteNo+1])<<2 ] ;
+    res[rc++]  = encodingVariant[ bin[byteNo] >> 2 ] ;
+    res[rc++]  = encodingVariant[ ((0x3&bin[byteNo])<<4)   +   (bin[byteNo+1] >> 4) ] ;
+    res[rc++]  = encodingVariant[ (0x0f&bin[byteNo+1])<<2 ] ;
     res[rc++] = '=';
   }
 
@@ -119,9 +166,19 @@ char* base64( const void* binaryData, int len, int *flen )
   return res ;
 }
 
-unsigned char* unbase64( const char* ascii, int len, int *flen )
+/**
+ *  The version without a variant (uses 'standard').
+ */
+char* base64( const void* binaryData, int len, int *flen )
+{
+  return base64Variant(binaryData, len, flen, NULL);
+}
+
+
+unsigned char* unbase64Variant( const char* ascii, int len, int *flen, const unsigned char* variant )
 {
   const unsigned char *safeAsciiPtr = (const unsigned char*)ascii ;
+  const char * decodingVariant  = (variant != NULL ? variant : standardBase64Decode);
   unsigned char *bin ;
   int cb=0;
   int charNo;
@@ -147,10 +204,10 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
 
   for( charNo=0; charNo <= len - 4 - pad ; charNo+=4 )
   {
-    int A=unb64[safeAsciiPtr[charNo]];
-    int B=unb64[safeAsciiPtr[charNo+1]];
-    int C=unb64[safeAsciiPtr[charNo+2]];
-    int D=unb64[safeAsciiPtr[charNo+3]];
+    int A=decodingVariant[safeAsciiPtr[charNo]];
+    int B=decodingVariant[safeAsciiPtr[charNo+1]];
+    int C=decodingVariant[safeAsciiPtr[charNo+2]];
+    int D=decodingVariant[safeAsciiPtr[charNo+3]];
 
     bin[cb++] = (A<<2) | (B>>4) ;
     bin[cb++] = (B<<4) | (C>>2) ;
@@ -159,23 +216,32 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
 
   if( pad==1 )
   {
-    int A=unb64[safeAsciiPtr[charNo]];
-    int B=unb64[safeAsciiPtr[charNo+1]];
-    int C=unb64[safeAsciiPtr[charNo+2]];
+    int A=decodingVariant[safeAsciiPtr[charNo]];
+    int B=decodingVariant[safeAsciiPtr[charNo+1]];
+    int C=decodingVariant[safeAsciiPtr[charNo+2]];
 
     bin[cb++] = (A<<2) | (B>>4) ;
     bin[cb++] = (B<<4) | (C>>2) ;
   }
   else if( pad==2 )
   {
-    int A=unb64[safeAsciiPtr[charNo]];
-    int B=unb64[safeAsciiPtr[charNo+1]];
+    int A=decodingVariant[safeAsciiPtr[charNo]];
+    int B=decodingVariant[safeAsciiPtr[charNo+1]];
 
     bin[cb++] = (A<<2) | (B>>4) ;
   }
 
   return bin ;
 }
+
+/**
+ *  The original decoder.
+ */
+unsigned char* unbase64( const char* ascii, int len, int *flen )
+{
+  return unbase64Variant(ascii, len, flen, NULL);
+}
+
 
 #endif
 
