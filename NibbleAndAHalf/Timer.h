@@ -22,7 +22,7 @@ class Timer
   #else
   timeval startTime ;
   #endif
-  
+
 public:
   Timer() {
     #ifdef _WIN32
@@ -103,3 +103,4 @@ double CTimerGetTime( CTimer* ctimer ) {
 
 
 #endif
+
