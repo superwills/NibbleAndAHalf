@@ -360,6 +360,7 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
     bin[cb++] = (A<<2) | (B>>4) ;
   }
   
+  bin[*flen - 1] = '\0';
   return bin ;
 }
 
