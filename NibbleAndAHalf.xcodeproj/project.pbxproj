@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9F090EE027A97B5B007B3512 /* base64.c in Sources */ = {isa = PBXBuildFile; fileRef = 9F090EDF27A97B5B007B3512 /* base64.c */; };
+		9F090EE227A97B6D007B3512 /* testbase64.c in Sources */ = {isa = PBXBuildFile; fileRef = 9F090EE127A97B6D007B3512 /* testbase64.c */; };
+		9F090EE427A97BF3007B3512 /* Timer.c in Sources */ = {isa = PBXBuildFile; fileRef = 9F090EE327A97BF3007B3512 /* Timer.c */; };
 		9F406A44171E649000DAD9AD /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 9F406A43171E649000DAD9AD /* main.c */; };
 		9F406A4D171E64D400DAD9AD /* Timer.h in Sources */ = {isa = PBXBuildFile; fileRef = 9F406A4C171E64CA00DAD9AD /* Timer.h */; };
 /* End PBXBuildFile section */
@@ -24,6 +27,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9F090EDF27A97B5B007B3512 /* base64.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = base64.c; sourceTree = "<group>"; };
+		9F090EE127A97B6D007B3512 /* testbase64.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = testbase64.c; sourceTree = "<group>"; };
+		9F090EE327A97BF3007B3512 /* Timer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Timer.c; sourceTree = "<group>"; };
 		9F406A40171E649000DAD9AD /* NibbleAndAHalf */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NibbleAndAHalf; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F406A43171E649000DAD9AD /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		9F406A4C171E64CA00DAD9AD /* Timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
@@ -61,10 +67,13 @@
 		9F406A42171E649000DAD9AD /* NibbleAndAHalf */ = {
 			isa = PBXGroup;
 			children = (
-				9F406A4C171E64CA00DAD9AD /* Timer.h */,
 				9F4C4AE8171F4F57002F80FE /* base64.h */,
-				9F406A50171F1F7600DAD9AD /* testbase64.h */,
+				9F090EDF27A97B5B007B3512 /* base64.c */,
 				9F406A43171E649000DAD9AD /* main.c */,
+				9F406A50171F1F7600DAD9AD /* testbase64.h */,
+				9F090EE127A97B6D007B3512 /* testbase64.c */,
+				9F406A4C171E64CA00DAD9AD /* Timer.h */,
+				9F090EE327A97BF3007B3512 /* Timer.c */,
 			);
 			path = NibbleAndAHalf;
 			sourceTree = "<group>";
@@ -121,7 +130,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9F090EE427A97BF3007B3512 /* Timer.c in Sources */,
 				9F406A4D171E64D400DAD9AD /* Timer.h in Sources */,
+				9F090EE027A97B5B007B3512 /* base64.c in Sources */,
+				9F090EE227A97B6D007B3512 /* testbase64.c in Sources */,
 				9F406A44171E649000DAD9AD /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
