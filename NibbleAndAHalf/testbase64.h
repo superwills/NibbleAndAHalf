@@ -11,75 +11,6 @@
 
 #include "Timer.h"
 
-// Checks the integrity of a base64 string to make sure it is
-// made up of only characters in the base64 alphabet (array b64)
-#ifdef __cplusplus
-// Prefer an inline function in C++
-inline int isbase64ValidChr( char ch )
-{
-  return ('0' <= ch && ch <= '9') || // between 0-9
-         ('A' <= ch && ch <= 'Z') || // between A-Z
-         ('a' <= ch && ch <= 'z') || // between a-z
-           ch=='+'   ||   ch=='/' ; // other 2 valid chars, + ending chrs
-}
-#else
-// OK ANSI C, a #define it is
-#define isbase64ValidChr( ch ) ( ('0' <= ch && ch <= '9') || \
-('A' <= ch && ch <= 'Z') || ('a' <= ch && ch <= 'z') || \
-ch=='+' || ch=='/' )
-#endif
-
-// Well after writing it and testing the macro above, I noticed
-// the isbase64ValidChr macro doesn't perform better than the isbase64ValidChr function,
-// even WITHOUT keyword inline.
-
-int base64integrity( const char *ascii, int len )
-{
-  // LOOKING FOR BAD CHARACTERS
-  int i ;
-  for( i = 0 ; i < len - 2 ; i++ )
-  {
-    if( !isbase64ValidChr( ascii[i] ) ) 
-    {
-      printf( "ERROR in base64integrity at chr %d. String is NOT valid base64.\n", i ) ;
-      return 0 ;
-    }
-  }
-  
-  // Only last 2 can be '='
-  // Check 2nd last:
-  if( ascii[i]=='=' )
-  {
-    // If the 2nd last is = the last MUST be = too
-    if( ascii[i+1] != '=' )
-    {
-      printf( "ERROR in base64integrity at chr %d.\n"
-      "If the 2nd last chr is '=' then the last chr must be '=' too.\n "
-      "String is NOT valid base64.", i ) ;
-      return 0 ;
-    }
-  }
-  else if( !isbase64ValidChr( ascii[i] ) )  // not = or valid base64
-  {
-    // 2nd last was invalid and not '='
-    printf( "ERROR in base64integrity at chr %d (2nd last chr). String is NOT valid base64.\n", i ) ;
-    return 0 ;
-  }
-  
-  // check last
-  
-  i++ ;
-  if( ascii[i]!='=' && !isbase64ValidChr( ascii[i] ) )
-  {
-    printf( "ERROR in base64integrity at chr %d (last chr). String is NOT valid base64.\n", i ) ;
-    return 0 ;    
-  }
-  
-  // Otherwise if get here, b64 string was valid.
-  
-  return 1 ;
-}
-
 // Function for automated testing of base64.h.  Also times.
 int testbase64( const void* data, int dataLen )
 {
@@ -112,22 +43,23 @@ int testbase64( const void* data, int dataLen )
     puts( "ERROR: Bad base64 characters detected" ) ;
   printf( "base64 integrity check %f seconds\n", CTimerGetTime( &t ) ) ;
   
-  
   CTimerReset( &t ) ;
   recoveredData = unbase64( base64Ascii, base64AsciiLen, &recoveredLen ) ;
   if( !recoveredData )  return 0 ; //memory failure, or invalid base64 data
   printf( "unbase64 %f seconds\n", CTimerGetTime( &t ) ) ;
   
-  #ifdef BASE64TESTSHOWDATA
-  puts( "Original text:" ) ;
-  puts( "--------------------" ) ;
-  puts( (char*)data ) ;
-  puts( "--------------------" ) ;
-  puts( "Base64'd ascii text:" ) ;
-  puts( "--------------------" ) ;
-  puts( recoveredData ) ;
-  puts( "--------------------" ) ;
-  #endif
+  if( BASE64TESTSHOWDATA )
+  {
+    puts( "Original text:" ) ;
+    puts( (char*)data ) ;
+    puts( "--------------------" ) ;
+    puts( "Base64'd ascii text:" ) ;
+    puts( base64Ascii );
+    puts( "--------------------" ) ;
+    puts( "Unbase64'd recovered data:" ) ;
+    puts( recoveredData ) ;
+    puts( "--------------------" ) ;
+  }
   
   printf( "base64: %d bytes => %d bytes => %d bytes\n", dataLen, base64AsciiLen, recoveredLen ) ;
   puts( "Checking.." ) ;
@@ -140,9 +72,9 @@ int testbase64( const void* data, int dataLen )
   // Data is the exact same len. Good.
   else for( i = 0 ; i < dataLen ; i++ ) // good ol' else for
   {
-    #ifdef BASE64TESTSHOWDATA
-    printf( "\n%4d  | %3d | %3d |", i, binaryPtr[i], recoveredData[i] ) ;
-    #endif
+    if( BASE64TESTSHOWDATA )
+      printf( "\n%4d  | %3d | %3d |", i, binaryPtr[i], recoveredData[i] ) ;
+    
     if( binaryPtr[i] != recoveredData[i] )
     {
       printf( " X" ) ; //\nERROR: byte @ %d != original data: (%d != %d)\n", i, data[i], recoveredData[i] );
@@ -241,7 +173,7 @@ void printUnbase64()
     printf( "  0, " ) ;
     if( i && (i+1)%10==0 ) printf("//%d \n", (i+1) );
   }
-  printf( "\n}; // This array has %d elements\n", i-1 ) ;
+  printf( "\n}; // This array has %d elements\n", i ) ;
   
 }
 

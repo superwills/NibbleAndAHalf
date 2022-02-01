@@ -13,31 +13,19 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-
-// Don't uncomment this unless you are testing small data sizes
-//#define BASE64TESTSHOWDATA
+// Only want to see the data output for small data sizes
+int BASE64TESTSHOWDATA = 0;
 
 int BASE64TESTMAXDATALEN=1<<27; // Tests up to 128 MB
 
 #include "testbase64.h"
 
-int main( int argc, char** argv )
+void automatedTests()
 {
-  //printUnbase64() ;  return 1 ; // Show me the unbase64 conversion array
   int allOk=1;
   int testDatLen=1;
   int i ;
   
-  // WRITE YOUR OWN TEST
-  const char * str = "hi there aardvark!! @#$**&^)" ;
-  testbase64( str, (int)strlen(str)+1 ) ;  // length of strlen(str)+1 to include NULL in the base64 encoding
-  //testbase64( "", 0 ) ; // sweet empty string test case
-  return 1 ;
-  //testunbase64withbadascii();
-  
-  ///*
-  // AUTOMATED TESTS
   //srand( 220 ); // want same sequences
   srand( (unsigned int)time(0) ) ;
   
@@ -56,7 +44,24 @@ int main( int argc, char** argv )
   
   if( allOk )  puts( "-- ALL TESTS COMPLETED SUCCESSFULLY --" ) ;
   else puts( "ERROR: At least one test failed. You should check it out." ) ;
-  //*/
+}
+
+int main( int argc, char** argv )
+{
+  //printUnbase64();  // Generate the unbase64 conversion array
+  
+  BASE64TESTSHOWDATA = 1;
+  puts("Test against a custom string.");
+  const char * str = "hi there aardvark!! @#$**&^)" ;
+  testbase64( str, (int)strlen(str)+1 ) ;  // length of strlen(str)+1 to include NULL in the base64 encoding
+  //testbase64( "", 0 ) ; // sweet empty string test case
+  
+  //puts("Bad ascii tests.");
+  //testunbase64withbadascii();
+  
+  BASE64TESTSHOWDATA = 0; // Don't show the output for large data
+  //puts("Automated tests.");
+  //automatedTests();
   
   return 0;
 }

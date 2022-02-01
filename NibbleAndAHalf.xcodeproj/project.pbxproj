@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		9F406A44171E649000DAD9AD /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 9F406A43171E649000DAD9AD /* main.c */; };
 		9F406A4D171E64D400DAD9AD /* Timer.h in Sources */ = {isa = PBXBuildFile; fileRef = 9F406A4C171E64CA00DAD9AD /* Timer.h */; };
-		9F406A4F171E653200DAD9AD /* base64.h in Sources */ = {isa = PBXBuildFile; fileRef = 9F406A4E171E651B00DAD9AD /* base64.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,9 +27,8 @@
 		9F406A40171E649000DAD9AD /* NibbleAndAHalf */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = NibbleAndAHalf; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F406A43171E649000DAD9AD /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		9F406A4C171E64CA00DAD9AD /* Timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Timer.h; sourceTree = "<group>"; };
-		9F406A4E171E651B00DAD9AD /* base64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
 		9F406A50171F1F7600DAD9AD /* testbase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testbase64.h; sourceTree = "<group>"; };
-		9F4C4AE8171F4F57002F80FE /* base64explained.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base64explained.h; sourceTree = "<group>"; };
+		9F4C4AE8171F4F57002F80FE /* base64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,8 +62,7 @@
 			isa = PBXGroup;
 			children = (
 				9F406A4C171E64CA00DAD9AD /* Timer.h */,
-				9F4C4AE8171F4F57002F80FE /* base64explained.h */,
-				9F406A4E171E651B00DAD9AD /* base64.h */,
+				9F4C4AE8171F4F57002F80FE /* base64.h */,
 				9F406A50171F1F7600DAD9AD /* testbase64.h */,
 				9F406A43171E649000DAD9AD /* main.c */,
 			);
@@ -106,6 +103,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 9F406A37171E649000DAD9AD;
@@ -123,7 +121,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F406A4F171E653200DAD9AD /* base64.h in Sources */,
 				9F406A4D171E64D400DAD9AD /* Timer.h in Sources */,
 				9F406A44171E649000DAD9AD /* main.c in Sources */,
 			);
