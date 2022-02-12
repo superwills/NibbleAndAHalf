@@ -26,11 +26,11 @@ int testbase64( const void* data, int dataLen )
   CTimer t; // for timing runs
   
   printf( "Base64 test with " ) ;
-  if( dataLen < 1<<10 )  printf( "%d Bytes", dataLen ) ;
-  else if( dataLen < 1<<20 )  printf( "%d KB", dataLen >> 10 ) ;
-  else if( dataLen < 1<<30 )  printf( "%d MB", dataLen >> 20 ) ;
-  else  printf( "%d GB", dataLen >> 30 ) ;
-  printf( " of data\n" ) ;
+  if( dataLen < 1<<10 )  printf( "%d Bytes ", dataLen ) ;
+  else if( dataLen < 1<<20 )  printf( "%d KB ", dataLen >> 10 ) ;
+  else if( dataLen < 1<<30 )  printf( "%d MB ", dataLen >> 20 ) ;
+  else  printf( "%d GB ", dataLen >> 30 ) ;
+  puts( "of data" ) ;
   
   CTimerInit( &t ) ;
   base64Ascii = base64( data, dataLen, &base64AsciiLen ) ;

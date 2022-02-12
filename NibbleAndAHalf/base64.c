@@ -15,6 +15,10 @@
 const static char* b64="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" ;
 
 // unb64 maps A=>0, B=>1.. and all others not present in base64 alphabet to 0.
+// You can clearly see here why base64 encoding is a really bloated representation
+// of the original data: look how many entries are unused. Each ascii character
+// can index any value between 0-255 in an array, but we're only using 64 of
+// the available slots for meaningful values, leaving 192/256 values unused.
 const static unsigned char unb64[]={
   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //10 
   0,   0,   0,   0,   0,   0,   0,   0,   0,   0, //20 
@@ -46,19 +50,26 @@ const static unsigned char unb64[]={
 
 // Converts any binary data to base64 characters.
 // Length of the resultant string is stored in flen
-// (you must pass pointer flen).
+// (you must pass pointer flen). flen is strlen, it doesn't
+// include the null terminator.
+// A common trip-up is not passing your null terminator into
+// this function, if you want your C string to be fully encoded,
+// you have to pass strlen(str)+1 to as binaryData as I have in the
+// examples.
 char* base64( const void* binaryData, int len, int *flen )
 {
+  printf("Encoding %d bytes of binary data\n", len);
+  
   // I look at your data like the stream of unsigned bytes that it is
-  // Main pointers
-  const unsigned char* bin = (const unsigned char*) binaryData ;
+  const unsigned char* bin = (const unsigned char*)binaryData ;
   char* res ;
   
   // Counters
   int rc = 0 ; // result counter
-  int byteNo ; // I need this after the loop
+  int byteNo ; // Which byte we're on of the original source data.
+  // I still need this variable after the loop
   
-  int modulusLen = len % 3 ;
+  int lenMod3 = len % 3 ;
   
   // PAD. Base64 is all about breaking the input into SEXTETS, or 6-bit inputs.
   // If you have 1 byte of input, that's 8 bits, not 6. So it won't fit.
@@ -70,10 +81,12 @@ char* base64( const void* binaryData, int len, int *flen )
   // We use modulus 3 bytes above because that's 24 bits, and 24 bits is
   // the lowest number that is both divisible by 6 and 8. We need the final
   // output data is to both be divisible by 6 and 8.
-  int pad = ((modulusLen&1)<<1) + ((modulusLen&2)>>1) ; // 2 gives 1 and 1 gives 2, but 0 gives 0.
+  int pad = ((lenMod3&1)<<1) + ((lenMod3&2)>>1) ; // 2 gives 1 and 1 gives 2, but 0 gives 0.
   
+  // 
   *flen = 4*(len + pad)/3 ; // (len+pad) IS divisible by 3
-  //printf( "dataLen=%d, pad=%d, flen=%d\n", len, pad, flen ) ;
+  printf("%d %% 3 = %d, %d bytes pad, +1 byte NULL, flen=%d\n", len, lenMod3, pad, *flen);
+  
   res = (char*) malloc( *flen + 1 ) ; // and one for the null
   if( !res )
   {
@@ -82,14 +95,16 @@ char* base64( const void* binaryData, int len, int *flen )
     return 0;
   }
   
-  for( byteNo = 0 ; byteNo <= len-3 ; // If there WAS padding, skip the last 3 octets and process below.
+  for( byteNo = 0 ; byteNo <= len-3 ; // This loop is NOT entered for last 3 bytes??
+    // If there WAS padding, skip the last 3 octets and process below.
     // 0=>no, 1=>no, 2=>no, 3=>ONCE,4=>ONCE,5=>ONCE, 6=>2x..
     byteNo+=3 )
   {
-    unsigned char BYTE0=bin[byteNo];
-    unsigned char BYTE1=bin[byteNo+1];
-    unsigned char BYTE2=bin[byteNo+2];
-    //printf( "BYTE0=%d BYTE1=%d BYTE2=%d\n", BYTE0, BYTE1, BYTE2 ) ;
+    // Use unsigned char so shifts left will always bring in 0's
+    unsigned char BYTE0 = bin[byteNo];
+    unsigned char BYTE1 = bin[byteNo+1];
+    unsigned char BYTE2 = bin[byteNo+2];
+    printf( "BYTE0=%d BYTE1=%d BYTE2=%d\n", BYTE0, BYTE1, BYTE2 ) ;
     //    bin[0]       bin[1]      bin[2]
     // +-----------+-----------+-----------+
     // | 0000 0011   0111 1011   1010 1101 |
@@ -98,31 +113,73 @@ char* base64( const void* binaryData, int len, int *flen )
     // B:39 => n
     // C:46 => u
     // D:45 => t
-    ///unsigned char mask11111100 = 0x3f, mask00111111 = 0x3f, mask00111111 = 0x3f ;
     
-    // Take first sextet (an octet (byte) is 8 bits, so a sextet is 6 bits, or a nibble and a half.)
-    // and find out what number they are.
-    res[rc++]  = b64[ BYTE0 >> 2 ] ; // unsigned so 0's always come in from left (even though there is 
-    // implicit int promotion on R&L sides prior to actual bitshift).
-    // convert that number into the base64 alphabet.
-    // the value in 6 bits can never be larger than 63.
+    // Convert sextets in stream into the base64 alphabet using b64 array
+    // the value in 6 bits can never be larger than 63, but the b64 array
+    // protects us from OOB accesses anyway by providing 
     
-    // the second sextet is part of the first byte and partly in the 2nd byte.
-    res[rc++]  = b64[ ((0x3&BYTE0)<<4) + (BYTE1 >> 4) ] ;  // 1st term: 3<<4 has a maximum value of 110000=48.
+    // We want to shift the first 6 bits in the above diagram down to sitting
+    // flushed to the right. So we want bin[0] (containing AAAA AABB) to just
+    // become 00AA AAAA. We do that with a shift right of 2 bits.
     
-    // notice how I avoided the scary endian ghost by using a unsigned char* ptr for all this.
+    // We take the number that comes out of that and immediately convert it to
+    // the base64 character for that number by doing a direct lookup into the
+    // b64 encoding array.
     
-    // 3rd sextet is lower nibble of 2nd byte and upper half nibble of 3rd byte.
-    res[rc++]  = b64[ ((0x0f&BYTE1)<<2) + (BYTE2>>6) ] ; // 1st term: those are the higher order bits
+    res[rc++]  = b64[ BYTE0 >> 2 ] ;
+    // No mask needed since BYTE0 is unsigned, so 0's always come in from left
+    // (even though there is implicit int promotion on R&L sides prior to actual bitshift).
+    
+    // the second sextet BBBBBB is part of the first byte and partly in the 2nd byte.
+    //   BYTE0       BYTE1
+    // AAAA AABB   BBBB CCCC
+    // The first part takes the lower 2 bits of the first byte and pushes them
+    // LEFT 4: (AAAA AABB becomes 00BB 0000), then bitwise ORs to it the top 4 bits of
+    // BYTE1, shifted RIGHT 4 (BBBB CCCC becomes 0000 BBBB).
+    res[rc++]  = b64[ ((0x3&BYTE0)<<4) | (BYTE1 >> 4) ] ;
+    
+    // 3rd sextet CCCCCC is lower nibble of 2nd byte and upper half nibble of 3rd byte.
+    //   BYTE1       BYTE2
+    // BBBB CCCC   CCDD DDDD
+    // From BYTE1, we need to get rid of the BBBB in the front, so we mask
+    // those off with 0xf (0000 1111). Then we shift BYTE1 LEFT 2
+    // (BBBB CCCC becomes 00CC CC00).
+    // We need to fill in the bottom 2 bits of 00CC CC00 with the top 2 bits
+    // in BYTE2. So we just shift BYTE2 right by 6 bits (CCDD DDDD becomes 0000 00CC).
+    res[rc++]  = b64[ ((0xf&BYTE1)<<2) | (BYTE2>>6) ] ;
     
     // 4th sextet
-    res[rc++]  = b64[ 0x3f&BYTE2 ] ;  // already low order, just mask off 2 hiorder bits
+    // already low order, just mask off 2 hiorder bits
+    //   BYTE2
+    // CCDD DDDD
+    // We just want to mask off the top 2 bits, use mask 0011 1111 or just 0x3f
+    res[rc++]  = b64[ 0x3f&BYTE2 ] ;
   }
   
   // The last 3 octets must be converted carefully as if len%3==1 or len%3==2 we must
   // "pretend" there are additional bits at the end.
-  if( pad==2 ) //len%3==1 (1,4,7,10)
+  if( pad==1 )
   {
+    unsigned char BYTE0 = bin[byteNo];
+    unsigned char BYTE1 = bin[byteNo+1];
+    printf( "BYTE0=%d BYTE1=%d\n", BYTE0, BYTE1 ) ;
+    // When len%3==2 (2,5,8,11) (missing 1 byte).
+    //   - 3 sextets (C is 0 padded)
+    //    bin[0]       bin[1]      bin[2]
+    // +-----------+-----------+-----------+
+    // | 0000 0011   1111 1111   ~~~~ ~~~~ |
+    // +-AAAA AABB   BBBB CCCC   XXXX XXXX  
+    res[rc++]  = b64[ BYTE0 >> 2 ] ;
+    res[rc++]  = b64[ ((0x3&BYTE0) << 4)   |   (BYTE0 >> 4) ] ;
+    res[rc++]  = b64[ (0xf&BYTE1) << 2 ] ;
+     
+    // Last one is =.
+    res[rc++] = '=';
+  }
+  else if( pad==2 ) //len%3==1 (1,4,7,10)
+  {
+    unsigned char BYTE0 = bin[byteNo];
+    printf( "BYTE0=%d\n", BYTE0 ) ;
     // We are missing 2 bytes. So
     //   - we will only extract 2 sextets when len%3==1
     //   - The 2nd sextet's 2 HI ORDER BITS, NOT LO-ORDER.
@@ -131,34 +188,33 @@ char* base64( const void* binaryData, int len, int *flen )
     // +-----------+-----------+-----------+
     // | 0000 0011   ~~~~ ~~~~   ~~~~ ~~~~ |
     // +-AAAA AABB   XXXX XXXX   XXXX XXXX
-    res[rc++] = b64[ bin[byteNo] >> 2 ] ;
-    res[rc++] = b64[ (0x3&bin[byteNo])<<4 ] ; // "padded" by 0's, these 2 bits are still HI ORDER BITS.
+    res[rc++] = b64[ BYTE0 >> 2 ] ;
+    res[rc++] = b64[ (0x3&BYTE0) << 4 ] ; // "padded" by 0's, these 2 bits are still HI ORDER BITS.
     // Last 2 are ==, to indicate there's been a 2 byte-pad
     res[rc++] = '=';
     res[rc++] = '=';
   }
-  else if( pad==1 )
-  {
-    // When len%3==2 (2,5,8,11) (missing 1 byte).
-    //   - 3 sextets (C is 0 padded)
-    //    bin[0]       bin[1]      bin[2]
-    // +-----------+-----------+-----------+
-    // | 0000 0011   1111 1111   ~~~~ ~~~~ |
-    // +-AAAA AABB   BBBB CCCC   XXXX XXXX  
-    res[rc++]  = b64[ bin[byteNo] >> 2 ] ;
-    res[rc++]  = b64[ ((0x3&bin[byteNo])<<4)   +   (bin[byteNo+1] >> 4) ] ; //SEX2 formula
-    res[rc++]  = b64[ (0x0f&bin[byteNo+1])<<2 ] ; // only part of SEX3 that comes from byte#1
-     
-    // Last one is =.
-    res[rc++] = '=';
-  }
   
-  res[rc]=0; // NULL TERMINATOR! ;)
+  res[rc] = 0; // NULL TERMINATOR! ;)
   return res ;
 }
 
 int base64integrity( const char *ascii, int len )
 {
+  // There are some invalid unbase64 strings, even when they are comprised
+  // of completely valid characters. An example is "==". That's a 0-length
+  // piece of data that says it is padded by 2 bytes at the end. Well, you
+  // only need to pad by 2 bytes if the number of bits in the original data
+  // was not evenly divisible by 6. 0%6==0, so something's clearly wrong here.
+  
+  // The smallest base64 string with data in it is the result of encoding 1 byte.
+  // The encoding ascii string always has a minimum length of __3 characters__
+  // because it will be padded by 2 bytes before encoding
+  if( len < 2 )
+    return 0;
+    
+  return 1;
+
   // LOOKING FOR BAD CHARACTERS
   int i ;
   for( i = 0 ; i < len - 2 ; i++ )
@@ -226,7 +282,7 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
 #endif
   
   if( len < 2 ) { // 2 accesses below would be OOB.
-    // catch empty string, return NULL as result.
+    // catch strings with length less than 3, return NULL as result.
     puts( "ERROR: You passed an invalid base64 string (too short). You get NULL back." ) ;
     *flen=0;
     return 0 ;

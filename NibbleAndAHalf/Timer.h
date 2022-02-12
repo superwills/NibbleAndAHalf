@@ -30,5 +30,4 @@ void CTimerInit( CTimer* ctimer );
 // Gets the most up to date time.
 double CTimerGetTime( CTimer* ctimer );
 
-
 #endif
