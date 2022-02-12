@@ -91,7 +91,7 @@ int testbase64( const void* data, int dataLen )
 void testunbase64withbadascii()
 {
   // BAD base64 data.  These numbers represent non-base64 alphabet characters.
-  // if BASE64PARANOIA is on, then unbase64() will catch it and send back a NULL
+  // if SAFEBASE64 is on, then unbase64() will catch it and send back a NULL
   // pointer.  Otherwise, you will just get invalid data back (but the program should not
   // crash).
   char badAscii[] = { -1, -3, -128, 127, 20, 10, 36, 92, 50, 126, 0, 0, 5, 0 } ;

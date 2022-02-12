@@ -34,16 +34,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// The COMPILE-TIME SETTING BASE64PARANOIA is really important.
+// The COMPILE-TIME SETTING SAFEBASE64 is really important.
 // You need to decide if PARANOIA is more important to you than speed.
 //
-// BASE64PARANOIA: Remove this def to NOT check the validity of base64 ascii strings
-// before unbase64'ing that string.  If you don't #define BASE64PARANOIA,
+// SAFEBASE64: Remove this def to NOT check the validity of base64 ascii strings
+// before unbase64'ing that string.  If you don't #define SAFEBASE64,
 // then the program assumes that all characters in the string sent to unbase64() 
 // are in the base64 alphabet.  As such if a character is NOT in the base64 alphabet
 // your data will be wrong (it will be turned to 0 (as if it were just a base64 'A')).
 // Removing this test greatly speeds up unbase64'ing (by about 3-4x).
-#define BASE64PARANOIA
+#define SAFEBASE64
 
 // Converts any binary data to base64 characters.
 // Length of the resultant string is stored in flen
