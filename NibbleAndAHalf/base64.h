@@ -52,25 +52,10 @@ char* base64( const void* binaryData, int len, int *flen );
 
 // Checks the integrity of a base64 string to make sure it is
 // made up of only characters in the base64 alphabet (array b64)
-#ifdef __cplusplus
-// Prefer an inline function in C++
-inline int isbase64ValidChr( char ch )
-{
-  return ('0' <= ch && ch <= '9') || // between 0-9
-         ('A' <= ch && ch <= 'Z') || // between A-Z
-         ('a' <= ch && ch <= 'z') || // between a-z
-           ch=='+'   ||   ch=='/' ; // other 2 valid chars, + ending chrs
-}
-#else
 // OK ANSI C, a #define it is
 #define isbase64ValidChr( ch ) ( ('0' <= ch && ch <= '9') || \
 ('A' <= ch && ch <= 'Z') || ('a' <= ch && ch <= 'z') || \
-ch=='+' || ch=='/' )
-#endif
-
-// Well after writing it and testing the macro above, I noticed
-// the isbase64ValidChr macro doesn't perform better than the isbase64ValidChr function,
-// even WITHOUT keyword inline.
+ch=='+' || ch=='/' )  // other 2 valid chars, + ending chrs
 
 int base64integrity( const char *ascii, int len );
 

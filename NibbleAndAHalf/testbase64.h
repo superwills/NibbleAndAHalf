@@ -14,16 +14,16 @@
 // Function for automated testing of base64.h.  Also times.
 int testbase64( const void* data, int dataLen );
 
-void testunbase64withbadascii();
+void testunbase64withbadascii(void);
 
 // -- other util --
 // Prints the unb64 array in base64.h
-void printUnbase64();
+void printUnbase64(void);
 
-void failingTest();
+void failingTest(void);
 
-void testUnbase64InvalidInput();
+void testUnbase64InvalidInput(void);
 
-void automatedTests();
+void automatedTests(void);
 
 #endif

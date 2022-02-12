@@ -15,15 +15,7 @@ const int BASE64TESTMAXDATALEN=1<<27; // Tests up to 128 MB
 // Function for automated testing of base64.h.  Also times.
 int testbase64( const void* data, int dataLen )
 {
-  // main ptrs
   unsigned char* binaryPtr = (unsigned char*)data ;
-  char* base64Ascii ;
-  char* recoveredData ;
-  
-  int outcome=1;
-  int base64AsciiLen, recoveredLen ;
-  int i ; //compare loop counter
-  CTimer t; // for timing runs
   
   printf( "Base64 test with " ) ;
   if( dataLen < 1<<10 )  printf( "%d Bytes ", dataLen ) ;
@@ -32,8 +24,10 @@ int testbase64( const void* data, int dataLen )
   else  printf( "%d GB ", dataLen >> 30 ) ;
   puts( "of data" ) ;
   
+  CTimer t;
   CTimerInit( &t ) ;
-  base64Ascii = base64( data, dataLen, &base64AsciiLen ) ;
+  int base64AsciiLen;
+  char* base64Ascii = base64( data, dataLen, &base64AsciiLen ) ;
   if( !base64Ascii )  return 0 ; //memory failure
   printf( "base64 %f seconds\n", CTimerGetTime( &t ) ) ;
   
@@ -44,8 +38,9 @@ int testbase64( const void* data, int dataLen )
     puts( "ERROR: Bad base64 characters detected" ) ;
   printf( "base64 integrity check %f seconds\n", CTimerGetTime( &t ) ) ;
   
-  CTimerReset( &t ) ;
-  recoveredData = (char*)unbase64( base64Ascii, base64AsciiLen, &recoveredLen ) ;
+  CTimerReset( &t );
+  int recoveredLen;
+  char* recoveredData = (char*)unbase64( base64Ascii, base64AsciiLen, &recoveredLen ) ;
   if( !recoveredData )  return 0 ; //memory failure, or invalid base64 data
   printf( "unbase64 %f seconds\n", CTimerGetTime( &t ) ) ;
   
@@ -64,6 +59,7 @@ int testbase64( const void* data, int dataLen )
   
   printf( "base64: %d bytes => %d bytes => %d bytes\n", dataLen, base64AsciiLen, recoveredLen ) ;
   puts( "Checking.." ) ;
+  int outcome = 1;
   if( dataLen != recoveredLen )
   {
     puts( "ERROR: length( unbase64( base64( data ) ) ) != length( data )" ) ;
@@ -71,7 +67,7 @@ int testbase64( const void* data, int dataLen )
     outcome = 0 ;
   }
   // Data is the exact same len. Good.
-  else for( i = 0 ; i < dataLen ; i++ ) // good ol' else for
+  else for( int i = 0 ; i < dataLen ; i++ ) // good ol' else for
   {
     if( BASE64TESTSHOWDATA )
       printf( "\n%4d  | %3d | %3d |", i, binaryPtr[i], recoveredData[i] ) ;
@@ -94,18 +90,15 @@ int testbase64( const void* data, int dataLen )
 
 void testunbase64withbadascii()
 {
-  int i ;
   // BAD base64 data.  These numbers represent non-base64 alphabet characters.
   // if BASE64PARANOIA is on, then unbase64() will catch it and send back a NULL
   // pointer.  Otherwise, you will just get invalid data back (but the program should not
   // crash).
   char badAscii[] = { -1, -3, -128, 127, 20, 10, 36, 92, 50, 126, 0, 0, 5, 0 } ;
   int badAsciiLen = sizeof( badAscii ) ;
-  unsigned char *baddat ;
-  int baddatLen ;
   
   puts( ">> NOW TESTING UNBASE64 WITH INVALID DATA:" ) ;
-  for( i = 0 ; i < badAsciiLen; i++ )
+  for( int i = 0 ; i < badAsciiLen; i++ )
     printf( "%d, ", badAscii[i] ) ;
   printf("\n<< EXPECTED >> ");
     
@@ -113,10 +106,11 @@ void testunbase64withbadascii()
   if( !base64integrity( badAscii, badAsciiLen ) )
   {
     puts( "There are some invalid ascii characters in your base64 string" ) ;
-    baddat = unbase64( badAscii, badAsciiLen, &baddatLen ) ;
+    int baddatLen ;
+    unsigned char *baddat = unbase64( badAscii, badAsciiLen, &baddatLen ) ;
     
     puts( "The unbase64'd data, anyway, is:" ) ;
-    for( i = 0 ; i < baddatLen ; i++ )
+    for( int i = 0 ; i < baddatLen ; i++ )
       printf( "%d, ", baddat[i] ) ;
     puts("");
     free( baddat ) ;
@@ -127,9 +121,9 @@ void testunbase64withbadascii()
 // Prints the unb64 array in base64.h
 void printUnbase64()
 {
-  int i;
-  puts( "const static unsigned char unb64[]={" ) ;
-  for( i = 0 ; i < '0' ; i++ )
+  int i = 0;
+  puts( "const static unsigned char unb64[] = {" ) ;
+  for( ; i < '0' ; i++ )
   {
     if( i=='+' ) // + is 43
       printf( " 62, " ) ;
@@ -139,27 +133,27 @@ void printUnbase64()
       printf( "  0, " ) ;
     if( i && (i+1)%10==0 ) printf("//%d \n", (i+1) );
   }
-  for( i = '0' ; i <= '9' ; i++ )
+  for( ; i <= '9' ; i++ )
   {
     printf( "%3d, ", i-'0' + 52 ) ; // '0'=>52, like a deck of cards. Go Nana.
     if( i && (i+1)%10==0 ) printf("//%d \n", (i+1) );
   }
-  for( i = '9'+1 ; i < 'A' ; i++ )
+  for( ; i < 'A' ; i++ )
   {
     printf( "  0, " ) ;
     if( i && (i+1)%10==0 ) printf("//%d \n", (i+1) );
   }
-  for( i = 'A' ; i <= 'Z' ; i++ )
+  for( ; i <= 'Z' ; i++ )
   {
     printf( "%3d, ", i-'A' ) ;
     if( i && (i+1)%10==0 ) printf("//%d \n", (i+1) );
   }
-  for( i = 'Z'+1 ; i < 'a' ; i++ )
+  for( ; i < 'a' ; i++ )
   {
     printf( "  0, " ) ;
     if( i && (i+1)%10==0 ) printf("//%d \n", (i+1) );
   }
-  for( i = 'a' ; i <= 'z' ; i++ )
+  for( ; i <= 'z' ; i++ )
   {
     printf( "%3d, ", i-'a'+26 ) ; //'a' has the value of 26
     if( i && (i+1)%10==0 ) printf("//%d \n", (i+1) );
@@ -195,16 +189,14 @@ void testUnbase64InvalidInput()
 void automatedTests()
 {
   int allOk=1;
-  int testDatLen=1;
-  int i ;
   
   //srand( 220 ); // want same sequences
   srand( (unsigned int)time(0) ) ;
   
-  for( testDatLen = 1 ; testDatLen <= BASE64TESTMAXDATALEN ; testDatLen <<= 1 )
+  for( int testDatLen = 1 ; testDatLen <= BASE64TESTMAXDATALEN ; testDatLen <<= 1 )
   {
     unsigned char *dat = (unsigned char*)malloc( testDatLen ) ;
-    for( i = 0 ; i < testDatLen ; i++ )
+    for( int i = 0 ; i < testDatLen ; i++ )
       dat[i]=rand(); // make new random data
       
     allOk &= testbase64( dat, testDatLen ) ;

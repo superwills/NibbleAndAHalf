@@ -213,8 +213,6 @@ int base64integrity( const char *ascii, int len )
   if( len < 2 )
     return 0;
     
-  return 1;
-
   // LOOKING FOR BAD CHARACTERS
   int i ;
   for( i = 0 ; i < len - 2 ; i++ )
@@ -272,10 +270,6 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
   // This eliminates a possible bounds check on your array lookups into unb64[]
   // (*(unsigned char*) having values between 0 and 255 means it will always be
   // inside the bounds of the 256 element array).
-  unsigned char *bin ;
-  int cb=0; // counter for bin
-  int charNo; // counter for what base64 char we're currently decoding
-  int pad = 0 ;
   
 #ifdef BASE64PARANOIA
   if( !base64integrity( ascii, len ) )  return 0 ; // NULL PTR if bad integrity.
@@ -290,6 +284,7 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
   
   // You have to ensure the integrity of the base64 string before
   // going ahead and counting the = as pad.
+  int pad = 0 ;
   
   // Count == on the end to determine how much it was padded.
   if( safeAsciiPtr[ len-1 ]=='=' )  ++pad ;
@@ -299,13 +294,16 @@ unsigned char* unbase64( const char* ascii, int len, int *flen )
   // to get the number of 3 octet groups. You then *3 to
   // get #octets total.
   *flen = 3*len/4 - pad ;
-  bin = (unsigned char*)malloc( *flen ) ; //exact len
+  unsigned char *bin = (unsigned char*)malloc( *flen ) ; //exact len
   if( !bin )
   {
     puts( "ERROR: unbase64 could not allocate enough memory." ) ;
     puts( "I must stop because I could not get enough" ) ;
     return 0;
   }
+  
+  int cb=0; // counter for bin
+  int charNo; // counter for what base64 char we're currently decoding
   
   // NEVER do the last group of 4 characters if either of the
   // last 2 chars were pad.
