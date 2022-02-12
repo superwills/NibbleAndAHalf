@@ -44,24 +44,28 @@
 // your data will be wrong (it will be turned to 0 (as if it were just a base64 'A')).
 // Removing this test greatly speeds up unbase64'ing (by about 3-4x).
 #define SAFEBASE64
+#define isMultipleOf(a,x) (!((a)%x))
 
 // Converts any binary data to base64 characters.
 // Length of the resultant string is stored in flen
 // (you must pass pointer flen).
 char* base64( const void* binaryData, int len, int *flen );
 
+// Convert your base64 string haJIh/+ back to binary data.
+// len is the string length and should NOT include the null terminator.
+// Final size will be stored in flen
+// (you must pass pointer flen).
+unsigned char* unbase64( const char* ascii, int len, int *flen );
+
 // Checks the integrity of a base64 string to make sure it is
 // made up of only characters in the base64 alphabet (array b64)
-// OK ANSI C, a #define it is
 #define isbase64ValidChr( ch ) ( ('0' <= ch && ch <= '9') || \
-('A' <= ch && ch <= 'Z') || ('a' <= ch && ch <= 'z') || \
-ch=='+' || ch=='/' )  // other 2 valid chars, + ending chrs
+  ('A' <= ch && ch <= 'Z') || ('a' <= ch && ch <= 'z') || \
+  ch=='+' || ch=='/' )  // other 2 valid chars, + ending chrs
+// = is NOT considered a valid base64 chr, it's only valid at the end for padding
 
+// Tells you if a string is valid base64, which means it's length is
+// a multiple of 4, and it contains only valid base64 chrs.
 int base64integrity( const char *ascii, int len );
-
-// It was recently found there are ways to trip up unbase64 by passing it
-// malformed ascii strings. However, you can still trip up the program by
-// passing it an incorrect data length.
-unsigned char* unbase64( const char* ascii, int len, int *flen );
 
 #endif

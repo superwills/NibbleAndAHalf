@@ -11,19 +11,21 @@
 
 #include "Timer.h"
 
+extern int BASE64TESTSHOWDATA;
+extern int SHOWTIMING;
+
 // Function for automated testing of base64.h.  Also times.
-int testbase64( const void* data, int dataLen );
+int testBase64( const void* data, int dataLen );
 
-void testunbase64withbadascii(void);
+int testBase64String( const char* str );
 
-// -- other util --
-// Prints the unb64 array in base64.h
-void printUnbase64(void);
+void testUnbase64WithBadAscii(void);
 
-void failingTest(void);
-
-void testUnbase64InvalidInput(void);
+void testUnbase64WithBadLength(void);
 
 void automatedTests(void);
+
+// Prints the unb64 array in base64.h
+void printUnbase64(void);
 
 #endif
