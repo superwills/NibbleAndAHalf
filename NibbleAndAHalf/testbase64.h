@@ -1,11 +1,6 @@
-//
-//  base64test.h
-//  NibbleAndAHalf
-//
-//  Created by William Sherif on 4/17/13.
 //  UNIT TESTS ONLY.
 //  YOU DO NOT NEED THIS FILE WHEN USING "base64.h"
-//
+
 #ifndef BASE64TEST_H
 #define BASE64TEST_H
 

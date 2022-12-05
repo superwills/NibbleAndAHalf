@@ -1,7 +1,6 @@
 /*
 
-  https://github.com/superwills/NibbleAndAHalf
-  base64.h -- Fast base64 encoding and decoding.
+  https://github.com/superwills/NibbleAndAHalf -- Fast base64 encoding and decoding.
   version 1.0.1, Feb 1, 2022 812a
 
   Copyright (C) 2013 William Sherif
@@ -23,11 +22,11 @@
   3. This notice may not be removed or altered from any source distribution.
 
   William Sherif
-  will.sherif@gmail.com
 
   YWxsIHlvdXIgYmFzZSBhcmUgYmVsb25nIHRvIHVz
 
 */
+
 #ifndef BASE64_H
 #define BASE64_H
 

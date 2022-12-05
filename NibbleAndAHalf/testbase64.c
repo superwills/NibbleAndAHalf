@@ -1,11 +1,3 @@
-//
-//  testbase64.c
-//  NibbleAndAHalf
-//
-//  Created by William Sherif on 2022-02-01.
-//  Copyright © 2022 William Sherif. All rights reserved.
-//
-
 #include "testbase64.h"
 #include "base64.h"
 
