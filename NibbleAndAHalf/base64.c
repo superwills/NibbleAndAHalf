@@ -50,7 +50,7 @@ const static unsigned char unb64[]={
 // examples.
 char* base64( const void* binaryData, int len, int *flen )
 {
-  printf("Base64 encoding %d bytes of binary data\n", len);
+  //printf("Base64 encoding %d bytes of binary data\n", len);
   
   // I look at your data like the stream of unsigned bytes that it is
   const unsigned char* bin = (const unsigned char*)binaryData ;
@@ -71,7 +71,7 @@ char* base64( const void* binaryData, int len, int *flen )
   
   *flen = 4*(len + pad)/3 ; // (len+pad) IS divisible by 3
   // So, final length IS a multiple of 4 for a valid base64 string.
-  printf("%d %% 3 = %d, %d bytes pad, +1 byte NULL, flen=%d\n", len, lenMod3, pad, *flen);
+  //printf("%d %% 3 = %d, %d bytes pad, +1 byte NULL, flen=%d\n", len, lenMod3, pad, *flen);
   
   // Allocate enough space for the base64 string result.
   char* base64String = (char*)malloc( *flen + 1 ) ; // and one for the null,
