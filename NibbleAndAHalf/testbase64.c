@@ -137,7 +137,7 @@ void testUnbase64WithBadLength()
   // that used to cause unbase64 to err-out.
   const char* invalidBase64 = "==";
   
-  int binaryLen;
+  int binaryLen = 0;
   unsigned char* binaryData = unbase64(invalidBase64, (int)strlen(invalidBase64), &binaryLen);
   printf("Binary length=%d\n", binaryLen);
   for( int i = 0; i < binaryLen; i++ )
