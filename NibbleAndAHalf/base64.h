@@ -38,7 +38,7 @@
 //
 // SAFEBASE64: Remove this def to NOT check the validity of base64 ascii strings
 // before unbase64'ing that string.  If you don't #define SAFEBASE64,
-// then the program assumes that all characters in the string sent to unbase64() 
+// then the program assumes that all characters in the string sent to unbase64()
 // are in the base64 alphabet.  As such if a character is NOT in the base64 alphabet
 // your data will be wrong (it will be turned to 0 (as if it were just a base64 'A')).
 // Removing this test greatly speeds up unbase64'ing (by about 3-4x).
