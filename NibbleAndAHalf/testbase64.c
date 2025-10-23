@@ -2,6 +2,7 @@
 #include "base64.h"
 
 #include <string.h>
+#include <time.h>
 
 int BASE64TESTSHOWDATA = 0;
 int SHOWTIMING = 0;
@@ -119,7 +120,7 @@ void testUnbase64WithBadAscii()
   if( !base64integrity( badAscii, badAsciiLen ) )
   {
     puts( "<< EXPECTED >> There are some invalid ascii characters in your base64 string" );
-    int baddatLen;
+    int baddatLen = 0;
     unsigned char *baddat = unbase64( badAscii, badAsciiLen, &baddatLen );
     
     printf( "The unbase64'd data is %d bytes, anyway, it is:\n", baddatLen );

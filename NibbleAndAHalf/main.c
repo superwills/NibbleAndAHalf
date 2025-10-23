@@ -19,15 +19,15 @@
 
 int main( int argc, char** argv )
 {
-  //printUnbase64();  // Generate the unbase64 conversion array
+  printUnbase64();  // Generate the unbase64 conversion array
   
-  //testBase64String( "hi there aardvark!! @#$**&^)" );
-  //testBase64String( "" ); // sweet empty string test case
+  testBase64String( "hi there aardvark!! @#$**&^)" );
+  testBase64String( "" ); // sweet empty string test case
   
-  //testUnbase64WithBadAscii();
+  testUnbase64WithBadAscii();
   testUnbase64WithBadLength();
   
-  //automatedTests();
+  automatedTests();
   
   return 0;
 }

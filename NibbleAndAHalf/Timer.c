@@ -1,5 +1,7 @@
 #include "Timer.h"
 
+#include <stddef.h>
+
 void CTimerReset( CTimer* ctimer ) {
   #ifdef _WIN32
   QueryPerformanceCounter( &ctimer->startTime ) ;
