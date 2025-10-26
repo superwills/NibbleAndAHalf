@@ -18,7 +18,7 @@ test: $(test_objects)
 	$(CC) -c $(OPTIMIZATION) $(CFLAGS) -o $@ $<
 
 libnaah64.so: base64.h base64.o
-	$(CC) -shared $^ -o $@
+	$(CC) -shared -o $@ base64.o
 
 libnaah64.a: base64.o
 	ar cr $@ $+
