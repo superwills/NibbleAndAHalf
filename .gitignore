@@ -2,3 +2,7 @@
 .vs/
 Debug/
 Release/
+*.o
+*.a
+*.so
+test
